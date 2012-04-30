@@ -22,20 +22,24 @@ path    = require 'path'
   actions:
     ".git/config": (filePath) ->
       fs.readFile filePath, (err, data) =>
-        [matched, host, user, repo] = data.toString().match ///.*
+        matches = data.toString().match ///.*
           \[remote\s[\"\']origin[\"\']\]        # origin declaration
           [^\[]*                                # match anything until next config declaration
           .*url\s?=\s?.*@(.*):(.*)/(.*)\.git\n  # extract remote url details 
-        ///        
+        ///
+        return unless matches
+        [matched, host, user, repo] = matches       
         @open(@hostURL(host, user, repo)) if host? and user? and repo?
 
 
     "package.json": (filePath) -> 
       package = require(filePath)
-      repo = package.repository
+      repo = package.repository ? {}
       url = if typeof(repo) is 'string' then repo else repo.url ? ""
       if url.length > 0
-        [match, host, user, repoName, ext] = url.match(/.*:\/\/(.*)\/(.*)\/([^\.]+)(.*)?/)
+        matches = url.match(/.*:\/\/(.*)\/(.*)\/([^\.]+)(.*)?/)
+        return unless matches
+        [match, host, user, repoName, ext] = matches
         url = @hostURL(host, user, repoName)
       else if package.name.toString().length > 0
         url = "'https://github.com/search?utf8=✓&q=#{package.name}&type=Everything&start_value=1'"
