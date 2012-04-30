@@ -32,10 +32,11 @@ path    = require 'path'
 
     "package.json": (filePath) -> 
       package = require(filePath)
-      url = package.repository?.url ? ""
+      repo = package.repository
+      url = if typeof(repo) is 'string' then repo else repo.url ? ""
       if url.length > 0
-        [match, host, user, repo] = url.match(/.*:\/\/(.*)\/(.*)\/(.*)\.git/)
-        url = @hostURL(host, user, repo)
+        [match, host, user, repoName] = url.match(/.*:\/\/(.*)\/(.*)\/(.*)(\.git)?/)
+        url = @hostURL(host, user, repoName)
       else if package.name.toString().length > 0
         url = "'https://github.com/search?utf8=✓&q=#{package.name}&type=Everything&start_value=1'"
       @open(url) if url.length > 0
