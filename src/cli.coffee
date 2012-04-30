@@ -8,6 +8,7 @@ path    = require 'path'
   opened: false
 
   open: (url) ->  
+    return if @opened
     @opened = true
     exec "open #{url}"
 
@@ -38,9 +39,10 @@ path    = require 'path'
 
 
   run: ->
+    relativePath = process.argv[2] ? ""
     for file, action of @actions
       do (file, action) =>
-        filePath = path.resolve(file)
+        filePath = path.resolve(path.join(relativePath, file))
         path.exists filePath, (exists) => action.call(this, filePath) if exists and not @opened
 
 
