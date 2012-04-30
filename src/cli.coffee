@@ -35,7 +35,7 @@ path    = require 'path'
       repo = package.repository
       url = if typeof(repo) is 'string' then repo else repo.url ? ""
       if url.length > 0
-        [match, host, user, repoName] = url.match(/.*:\/\/(.*)\/(.*)\/(.*)(\.git)?/)
+        [match, host, user, repoName, ext] = url.match(/.*:\/\/(.*)\/(.*)\/([^\.]+)(.*)?/)
         url = @hostURL(host, user, repoName)
       else if package.name.toString().length > 0
         url = "'https://github.com/search?utf8=✓&q=#{package.name}&type=Everything&start_value=1'"
