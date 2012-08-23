@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/chrismccord/gitit.png)](http://travis-ci.org/chrismccord/gitit)
 # gitit
 Command line tool to quickly open a browser to a project's github page. 
 `gitit` examines a folder's .git/config and package.json file to determine its repository url and 
